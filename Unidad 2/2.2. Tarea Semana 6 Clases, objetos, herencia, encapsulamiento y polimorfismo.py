@@ -1,3 +1,5 @@
+#Unidad 2
+# Tarea Semana 6
 # Definición de la clase base 'Animal'
 class Animal:
     def __init__(self, especie, edad):

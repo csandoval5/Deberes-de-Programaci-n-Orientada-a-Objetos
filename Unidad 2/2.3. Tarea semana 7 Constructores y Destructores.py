@@ -1,3 +1,5 @@
+#Unidad 2
+# Tarea Semana 7
 class Animal:
     def __init__(self, nombre, especie):
         self.nombre = nombre

@@ -1,3 +1,5 @@
+#Unidad 1
+# Tarea Semana 3 Parte 2
 # Implementación de un programa en Python para determinar el promedio semanal
 # del clima  con programacion tradicional
 def obtener_datos_diarios():
