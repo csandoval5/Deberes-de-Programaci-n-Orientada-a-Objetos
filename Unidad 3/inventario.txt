@@ -1,0 +1,4 @@
+1,Camiseta Roja,15,12.99
+2,Pantalón Azul,10,24.99
+3,Zapatillas Blancas,20,34.50
+4,Gorra Negra,30,8.75
