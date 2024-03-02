@@ -28,14 +28,32 @@ class Inventario:
         except PermissionError:
             print(f"No se tienen permisos para acceder al archivo {archivo}. No se cargó ningún inventario.")
 
-    def agregar_producto(self, producto):
+    def agregar_producto(self, producto, archivo):
         self.productos[producto.id] = producto
+        with open(archivo, 'a') as f:
+            f.write(f"{producto.id},{producto.nombre},{producto.cantidad},{producto.precio}\n")
         print("Producto agregado correctamente.")
 
-    def eliminar_producto(self, id_producto):
+    def eliminar_producto(self, id_producto, archivo):
         if id_producto in self.productos:
             del self.productos[id_producto]
+            with open(archivo, 'w') as f:
+                for producto in self.productos.values():
+                    f.write(f"{producto.id},{producto.nombre},{producto.cantidad},{producto.precio}\n")
             print("Producto eliminado correctamente.")
+        else:
+            print("El producto con el ID especificado no existe en el inventario.")
+
+    def actualizar_producto(self, id_producto, archivo, cantidad=None, precio=None):
+        if id_producto in self.productos:
+            if cantidad is not None:
+                self.productos[id_producto].cantidad = cantidad
+            if precio is not None:
+                self.productos[id_producto].precio = precio
+            with open(archivo, 'w') as f:
+                for producto in self.productos.values():
+                    f.write(f"{producto.id},{producto.nombre},{producto.cantidad},{producto.precio}\n")
+            print("Producto actualizado correctamente.")
         else:
             print("El producto con el ID especificado no existe en el inventario.")
 
@@ -46,14 +64,8 @@ class Inventario:
             for producto in self.productos.values():
                 print(f"ID: {producto.id}, Nombre: {producto.nombre}, Cantidad: {producto.cantidad}, Precio: {producto.precio}")
 
-    def buscar_producto(self, nombre):
-        productos_encontrados = []
-        for producto in self.productos.values():
-            if nombre.lower() in producto.nombre.lower():
-                productos_encontrados.append(producto)
-        return productos_encontrados
-
     # Resto de métodos de la clase Inventario
+
 
 # Interfaz de usuario en la consola
 def menu():
@@ -63,9 +75,8 @@ def menu():
         print("\n1. Añadir producto")
         print("2. Eliminar producto")
         print("3. Actualizar producto")
-        print("4. Buscar producto")
-        print("5. Mostrar productos")
-        print("6. Salir")
+        print("4. Mostrar productos")
+        print("5. Salir")
 
         opcion = input("\nElige una opción: ")
 
@@ -75,26 +86,18 @@ def menu():
             cantidad = int(input("Introduce la cantidad del producto: "))
             precio = float(input("Introduce el precio del producto: "))
             producto = Producto(id, nombre, cantidad, precio)
-            inventario.agregar_producto(producto)
+            inventario.agregar_producto(producto, "inventario.txt")
         elif opcion == '2':
             id = input("Introduce el ID del producto que quieres eliminar: ")
-            inventario.eliminar_producto(id)
+            inventario.eliminar_producto(id, "inventario.txt")
         elif opcion == '3':
             id = input("Introduce el ID del producto que quieres actualizar: ")
             cantidad = int(input("Introduce la nueva cantidad del producto: "))
             precio = float(input("Introduce el nuevo precio del producto: "))
-            inventario.actualizar_producto(id, cantidad, precio)
+            inventario.actualizar_producto(id, "inventario.txt", cantidad, precio)
         elif opcion == '4':
-            nombre = input("Introduce el nombre del producto que quieres buscar: ")
-            productos = inventario.buscar_producto(nombre)
-            if productos:
-                for producto in productos:
-                    print(f"ID: {producto.id}, Nombre: {producto.nombre}, Cantidad: {producto.cantidad}, Precio: {producto.precio}")
-            else:
-                print("No se encontraron productos con ese nombre.")
-        elif opcion == '5':
             inventario.mostrar_productos()
-        elif opcion == '6':
+        elif opcion == '5':
             break
         else:
             print("Opción no válida. Inténtalo de nuevo.")
